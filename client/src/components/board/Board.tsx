@@ -1,19 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./style.css";
+import { io, Socket } from "socket.io-client";
+type BoardProps = {
+  penSize: number;
+  penColor: string;
+};
+type BoardStates = {};
+class Board extends React.Component<BoardProps, BoardStates> {
+  // var canvas: HTMLCanvasElement;
+  // var ctx: CanvasRenderingContext2D;
+  // var timeout: NodeJS.Timeout;
+  timeout: NodeJS.Timeout;
+  socket = io("http://localhost:3000");
+  isDrawing = false;
+  ctx: CanvasRenderingContext2D;
+  constructor(props: BoardProps) {
+    super(props);
+    const initData = (data: string) => {
+      var root: Board = this;
+      var interval = setInterval(function () {
+        if (root.isDrawing) {
+          return;
+        }
+        root.isDrawing = true;
+        clearInterval(interval);
+        var image = new Image();
+        var canvas = document.getElementById("board") as HTMLCanvasElement;
+        var ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        image.onload = function () {
+          ctx.drawImage(image, 0, 0);
+          root.isDrawing = false;
+        };
+        image.src = data;
+      }, 200);
+      return initData;
+    };
+    this.socket.on("canvas-data", (data) => initData(data));
+  }
+  componentDidMount() {
+    this.drawOnCanvas();
+  }
 
-interface BoardProps {
-  size: number;
-  color: string;
-}
-export default function Board(props: BoardProps) {
-  useEffect(() => {
-    drawOnCanvas();
-  });
+  componentWillReceiveProps(newProps: BoardProps) {
+    this.ctx.strokeStyle = newProps.penColor;
+    this.ctx.lineWidth = newProps.penSize;
+  }
+  // var socket = io.connect
+  // var socket = io.connect("http://localhost:5000");
+  // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
+  // const socket: Socket<ServerTo
 
-  function drawOnCanvas() {
+  drawOnCanvas() {
     var canvas = document.getElementById("board") as HTMLCanvasElement;
-    var ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-
+    this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    var ctx = this.ctx;
     var sketch = document.getElementById("sketch") as HTMLElement;
     var sketch_size = getComputedStyle(sketch);
     canvas.width = parseInt(sketch_size.getPropertyValue("width"));
@@ -32,12 +72,11 @@ export default function Board(props: BoardProps) {
       },
       false
     );
-
-    ctx.lineWidth = props.size;
+    console.log("in drawOnCanvas" + this.props);
+    ctx.lineWidth = this.props.penSize;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.strokeStyle = props.color;
-
+    ctx.strokeStyle = this.props.penColor;
     canvas.addEventListener("mousedown", function (e) {
       canvas.addEventListener("mousemove", onPaint, false);
     });
@@ -49,19 +88,30 @@ export default function Board(props: BoardProps) {
       },
       false
     );
-
+    var root = this;
     var onPaint = function () {
       ctx.beginPath();
       ctx.moveTo(last_mouse.x, last_mouse.y);
       ctx.lineTo(mouse.x, mouse.y);
       ctx.closePath();
       ctx.stroke();
+      if (root.timeout !== undefined) {
+        clearTimeout(root.timeout);
+      }
+      root.timeout = setTimeout(function () {
+        var base64ImageData = canvas.toDataURL("image/png");
+        root.socket.emit("canvas-data", base64ImageData);
+      }, 1000);
     };
   }
 
-  return (
-    <div className="sketch" id="sketch">
-      <canvas className="board" id="board"></canvas>
-    </div>
-  );
+  render() {
+    return (
+      <div className="sketch" id="sketch">
+        <canvas className="board" id="board"></canvas>
+      </div>
+    );
+  }
 }
+
+export default Board;
