@@ -16,7 +16,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
       penSize: 5,
     };
   }
-  changePenColor(event: React.ChangeEvent<HTMLSelectElement>) {
+  changePenColor(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ penColor: event.target.value });
   }
   changePenSize(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -27,8 +27,15 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     return (
       <div className="container">
         <div className="tools-bar">
-          <div className="color-picker-container">Select Pen Color: &nbsp;</div>
-          <select
+          <div className="color-picker-container">
+            Select Pen Color: &nbsp;
+            <input
+              type="color"
+              value={this.state.penColor}
+              onChange={this.changePenColor.bind(this)}
+            />
+          </div>
+          {/* <select
             value={this.state.penColor}
             onChange={this.changePenColor.bind(this)}
             style={styles.select}
@@ -36,7 +43,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
             <option value="blue">Blue</option>
             <option value="red">Red</option>
             <option value="green">Green</option>
-          </select>
+          </select> */}
           <div className="brushsize-container">
             Select Brush Size: &nbsp;
             <select
