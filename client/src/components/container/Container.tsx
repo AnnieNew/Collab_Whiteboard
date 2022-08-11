@@ -12,7 +12,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   constructor(props: string) {
     super(props);
     this.state = {
-      penColor: "Blue",
+      penColor: "black",
       penSize: 5,
     };
   }
@@ -35,15 +35,6 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               onChange={this.changePenColor.bind(this)}
             />
           </div>
-          {/* <select
-            value={this.state.penColor}
-            onChange={this.changePenColor.bind(this)}
-            style={styles.select}
-          >
-            <option value="blue">Blue</option>
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-          </select> */}
           <div className="brushsize-container">
             Select Brush Size: &nbsp;
             <select

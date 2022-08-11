@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./style.css";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 type BoardProps = {
   penSize: number;
   penColor: string;
 };
 type BoardStates = {};
 class Board extends React.Component<BoardProps, BoardStates> {
-  // var canvas: HTMLCanvasElement;
-  // var ctx: CanvasRenderingContext2D;
-  // var timeout: NodeJS.Timeout;
   timeout: NodeJS.Timeout;
+  // socket = io("http://localhost:3000", { transports: ["websocket"] });
   socket = io("http://localhost:3000");
   isDrawing = false;
   ctx: CanvasRenderingContext2D;
