@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { io, Socket } from "socket.io-client";
 import Board from "../board/Board";
 import "./style.css";
 
@@ -9,6 +10,7 @@ type ContainerState = {
 };
 
 class Container extends React.Component<ContainerProps, ContainerState> {
+  socket = io("http://localhost:3000");
   constructor(props: string) {
     super(props);
     this.state = {
@@ -21,6 +23,15 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   }
   changePenSize(event: React.ChangeEvent<HTMLSelectElement>) {
     this.setState({ penSize: Number(event.target.value) });
+  }
+
+  handleClearBoard() {
+    const canvas = document.getElementById("board") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    this.socket.emit('clear')
   }
 
   render() {
@@ -47,6 +58,8 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               <option value="10">10</option>
             </select>
           </div>
+
+          <button onClick={handleClearBoard}>Clear board</button>
         </div>
         <div className="board-container">
           <Board
