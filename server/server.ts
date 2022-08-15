@@ -2,9 +2,14 @@ var app = require("express")();
 let http = require("http").createServer(app);
 let io = require("socket.io")(http);
 io.on("connection", function (socket) {
-  console.log("a suer connected");
+  console.log("a user connected");
   socket.on("canvas-data", (data) => {
     socket.broadcast.emit("canvas-data", data);
+  });
+
+  socket.on("clear", () => {
+    socket.broadcast.emit("clear", "clear");
+    console.log("clear");
   });
 });
 
