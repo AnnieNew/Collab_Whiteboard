@@ -18,8 +18,11 @@
 }
 
 .eraser{
+	color: black;
 	display: inline;
-	color: white;
+	background-color: white;
+	font-size: 14px;
+	border-radius: 8px;
 	margin-left: 12px;
 }
 

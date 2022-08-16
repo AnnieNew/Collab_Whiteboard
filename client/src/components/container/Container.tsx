@@ -50,11 +50,9 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               <option value="10">10</option>
             </select>
           </div>
-		  <div className="eraser">
-            <button type = "button"
+            <button type = "button" className = "eraser"
 			  onClick={() =>{this.setState({penColor: "white"})}}
             >Eraser</button>
-          </div>
         </div>
         <div className="board-container">
           <Board
