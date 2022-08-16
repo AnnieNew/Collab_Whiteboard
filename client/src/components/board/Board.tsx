@@ -12,6 +12,7 @@ class Board extends React.Component<BoardProps, BoardStates> {
   socket = io("http://localhost:3000");
   isDrawing = false;
   ctx: CanvasRenderingContext2D;
+
   constructor(props: BoardProps) {
     super(props);
     const initData = (data: string) => {
@@ -33,7 +34,17 @@ class Board extends React.Component<BoardProps, BoardStates> {
       }, 200);
       return initData;
     };
+
+    const clearBoard = () => {
+      const canvas = document.getElementById("board") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+      // ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
     this.socket.on("canvas-data", (data) => initData(data));
+    this.socket.on("clear", () => clearBoard());
   }
   componentDidMount() {
     this.drawOnCanvas();
@@ -47,6 +58,17 @@ class Board extends React.Component<BoardProps, BoardStates> {
   // var socket = io.connect("http://localhost:5000");
   // const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
   // const socket: Socket<ServerTo
+
+  handleClearBoard() {
+    const canvas = document.getElementById("board") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    // ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    this.socket.emit("clear", "clear");
+  }
 
   drawOnCanvas() {
     var canvas = document.getElementById("board") as HTMLCanvasElement;
@@ -106,6 +128,7 @@ class Board extends React.Component<BoardProps, BoardStates> {
   render() {
     return (
       <div className="sketch" id="sketch">
+        <button onClick={() => this.handleClearBoard()}>Clear board</button>
         <canvas className="board" id="board"></canvas>
       </div>
     );

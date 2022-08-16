@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { io } from "socket.io-client";
 import Board from "../board/Board";
 import "./style.css";
 
@@ -9,6 +10,7 @@ type ContainerState = {
 };
 
 class Container extends React.Component<ContainerProps, ContainerState> {
+  socket = io("http://localhost:3000");
   constructor(props: string) {
     super(props);
     this.state = {
@@ -22,6 +24,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   changePenSize(event: React.ChangeEvent<HTMLSelectElement>) {
     this.setState({ penSize: Number(event.target.value) });
   }
+
 
   render() {
     return (
