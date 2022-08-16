@@ -16,3 +16,33 @@
 	margin-top: 1%;
 	background: white;
 }
+
+.brushsize-container {
+  display: inline;
+  color: white;
+  margin-left: 12px;
+}
+
+.eraser{
+	display: inline;
+	color: white;
+	margin-left: 12px;
+}
+
+.tools-bar {
+  text-align: center;
+}
+
+.board-container {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  margin-top: 1%;
+  background-color: white;
+}
+
+.select {
+  padding: 5;
+  margin-top: 30;
+}
+
