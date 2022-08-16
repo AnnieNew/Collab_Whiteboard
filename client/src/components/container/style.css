@@ -17,6 +17,12 @@
   margin-left: 12px;
 }
 
+.eraser{
+	display: inline;
+	color: white;
+	margin-left: 12px;
+}
+
 .tools-bar {
   text-align: center;
 }
